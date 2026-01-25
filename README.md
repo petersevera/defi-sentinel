@@ -32,6 +32,13 @@ skills across data engineering, LLM + RAG, agent orchestration, and low-latency 
 - Optional env: `ALCHEMY_RPC_URL`
 - See docs/CONFIG.md for details.
 
+## Phase 0: schema + fixtures + validator
+- Fixtures live in `data/fixtures/*.jsonl` (on-chain and off-chain samples).
+- Schema is defined in `src/normalize/schema.py`.
+- Validate fixtures:
+  - `pip install -r requirements.txt`
+  - `python scripts/validate_fixtures.py`
+
 ## Why it matters
 - Useful to engineers, analysts, and teams who want transparent, explainable risk context.
 - Demonstrates practical LLM + RAG usage with real data pipelines and operational concerns.
