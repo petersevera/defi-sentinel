@@ -48,6 +48,14 @@ skills across data engineering, LLM + RAG, agent orchestration, and low-latency 
   - `python scripts/ingest_rss.py`
 - Output: `data/ingest/rss_events.jsonl`
 
+## Phase 1: on-chain ingestion
+- Fetch and normalize Ethereum logs via Alchemy.
+- Details: `docs/INGEST_ONCHAIN.md`.
+- Run:
+  - `pip install -r requirements.txt`
+  - `python scripts/ingest_onchain.py`
+- Output: `data/ingest/onchain_events.jsonl`
+
 ## Why it matters
 - Useful to engineers, analysts, and teams who want transparent, explainable risk context.
 - Demonstrates practical LLM + RAG usage with real data pipelines and operational concerns.
