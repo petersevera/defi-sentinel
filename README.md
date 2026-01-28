@@ -56,6 +56,14 @@ skills across data engineering, LLM + RAG, agent orchestration, and low-latency 
   - `python scripts/ingest_onchain.py`
 - Output: `data/ingest/onchain_events.jsonl`
 
+## Phase 2: feature store + anomalies
+- Build rolling-count features from ingested events and flag simple surges.
+- Details: `docs/FEATURE_STORE.md`.
+- Run:
+  - `pip install -r requirements.txt`
+  - `python scripts/build_features.py`
+- Outputs: `data/feature_store.duckdb`, `data/features/*`
+
 ## Why it matters
 - Useful to engineers, analysts, and teams who want transparent, explainable risk context.
 - Demonstrates practical LLM + RAG usage with real data pipelines and operational concerns.
