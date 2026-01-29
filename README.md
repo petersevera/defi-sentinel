@@ -64,6 +64,13 @@ skills across data engineering, LLM + RAG, agent orchestration, and low-latency 
   - `python scripts/build_features.py`
 - Outputs: `data/feature_store.duckdb`, `data/features/*`
 
+## Phase 3: read-only API
+- FastAPI service that reads local JSONL outputs.
+- Details: `docs/API.md`.
+- Run:
+  - `pip install -r requirements.txt`
+  - `python scripts/run_api.py`
+
 ## Why it matters
 - Useful to engineers, analysts, and teams who want transparent, explainable risk context.
 - Demonstrates practical LLM + RAG usage with real data pipelines and operational concerns.
