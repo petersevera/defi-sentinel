@@ -13,8 +13,9 @@ Minimal read-only API for inspecting events and feature outputs.
 - `GET /features/latest` -> latest feature snapshot
   - Query params: `limit`
 - `GET /anomalies` -> anomaly rows
+- `GET /brief` -> summary of anomalies
+  - Query params: `limit` (top anomalies)
 
 Notes:
 - Endpoints return 404 if the expected data files do not exist.
 - The API reads local JSONL files and does not require a database.
-

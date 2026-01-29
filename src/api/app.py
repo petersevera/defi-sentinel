@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Iterable, List, Optional
+from typing import Dict, Iterable, List, Optional, Tuple
 
 from fastapi import FastAPI, HTTPException, Query
 
@@ -94,3 +94,35 @@ def anomalies() -> List[dict]:
     if not path.exists():
         raise HTTPException(status_code=404, detail="anomalies.jsonl not found")
     return _load_jsonl(path)
+
+
+def _count_by(items: Iterable[dict], key: str) -> Dict[str, int]:
+    counts: Dict[str, int] = {}
+    for item in items:
+        value = str(item.get(key, "unknown"))
+        counts[value] = counts.get(value, 0) + 1
+    return counts
+
+
+def _top_anomalies(items: List[dict], limit: int) -> List[dict]:
+    def _score(item: dict) -> Tuple[float, int]:
+        ratio = float(item.get("surge_ratio") or 0.0)
+        count_1h = int(item.get("count_1h") or 0)
+        return (ratio, count_1h)
+
+    ranked = sorted(items, key=_score, reverse=True)
+    return ranked[:limit]
+
+
+@app.get("/brief")
+def brief(limit: int = Query(default=5, ge=1, le=20)) -> dict:
+    path = FEATURES_DIR / "anomalies.jsonl"
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="anomalies.jsonl not found")
+    items = _load_jsonl(path)
+    return {
+        "total_anomalies": len(items),
+        "by_protocol": _count_by(items, "protocol"),
+        "by_kind": _count_by(items, "kind"),
+        "top_anomalies": _top_anomalies(items, limit),
+    }
