@@ -12,6 +12,11 @@
 - `ONCHAIN_LOOKBACK_BLOCKS` - How many blocks back to scan when START/END not set (default 10).
 - `START_BLOCK` - Optional explicit start block for on-chain ingestion.
 - `END_BLOCK` - Optional explicit end block for on-chain ingestion.
+- `CHROMA_PERSIST_DIR` - Persistent directory for the RAG vector index.
+- `CHROMA_COLLECTION` - Chroma collection name.
+- `EMBEDDING_MODEL` - Sentence-transformers model for embeddings.
+- `RAG_MAX_CHARS` - Max characters per indexed chunk.
+- `RAG_BATCH_SIZE` - Batch size for indexing.
 
 ## Example
 Copy `.env.example` to `.env` and fill in your key.
