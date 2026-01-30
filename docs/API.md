@@ -15,6 +15,8 @@ Minimal read-only API for inspecting events and feature outputs.
 - `GET /anomalies` -> anomaly rows
 - `GET /brief` -> summary of anomalies
   - Query params: `limit` (top anomalies)
+- `GET /rag/query` -> semantic search over indexed events
+  - Query params: `q`, `top_k`
 
 Notes:
 - Endpoints return 404 if the expected data files do not exist.

@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Tuple
 
 from fastapi import FastAPI, HTTPException, Query
+
+from rag.index import RagConfig, query_index
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = REPO_ROOT / "data"
@@ -31,6 +34,23 @@ def _load_jsonl(path: Path) -> List[dict]:
                 continue
             items.append(json.loads(text))
     return items
+
+
+def _load_env_file(path: Path) -> Dict[str, str]:
+    values: Dict[str, str] = {}
+    if not path.exists():
+        return values
+    for line in path.read_text(encoding="utf-8").splitlines():
+        text = line.strip()
+        if not text or text.startswith("#") or "=" not in text:
+            continue
+        key, value = text.split("=", 1)
+        values[key.strip()] = value.strip()
+    return values
+
+
+def _env_value(key: str, env_file: Dict[str, str], default: Optional[str] = None) -> Optional[str]:
+    return os.getenv(key) or env_file.get(key, default)
 
 
 def _filter_events(
@@ -126,3 +146,28 @@ def brief(limit: int = Query(default=5, ge=1, le=20)) -> dict:
         "by_kind": _count_by(items, "kind"),
         "top_anomalies": _top_anomalies(items, limit),
     }
+
+
+@app.get("/rag/query")
+def rag_query(
+    q: str = Query(..., min_length=3),
+    top_k: int = Query(default=5, ge=1, le=20),
+) -> dict:
+    env_file = _load_env_file(REPO_ROOT / ".env")
+    persist_dir = Path(_env_value("CHROMA_PERSIST_DIR", env_file, "data/chroma"))
+    collection = _env_value("CHROMA_COLLECTION", env_file, "defi_sentinel")
+    model = _env_value(
+        "EMBEDDING_MODEL",
+        env_file,
+        "sentence-transformers/all-MiniLM-L6-v2",
+    )
+
+    if not persist_dir.exists():
+        raise HTTPException(status_code=404, detail="Chroma index not found")
+
+    config = RagConfig(
+        persist_dir=persist_dir,
+        collection_name=collection,
+        embedding_model=model,
+    )
+    return query_index(config, q, top_k=top_k)
