@@ -6,6 +6,14 @@ Goal: a production-grade pipeline that fuses on-chain data and off-chain signals
 clear, actionable risk briefs and alerts for DeFi protocols. This showcases end-to-end
 skills across data engineering, LLM + RAG, agent orchestration, and low-latency components.
 
+## Quickstart
+- Copy `.env.example` to `.env` and fill in `ALCHEMY_API_KEY`.
+- Install core dependencies: `pip install -r requirements-core.txt`
+- Validate fixtures: `python scripts/validate_fixtures.py`
+- Build features: `python scripts/build_features.py`
+
+For RAG indexing, install full dependencies: `pip install -r requirements-rag.txt`.
+
 ## MVP scope
 - Ingest on-chain events from Ethereum mainnet for Aave v3 and Uniswap v3 via Alchemy RPC.
 - Ingest off-chain signals from public RSS feeds (governance, security advisories).
@@ -36,7 +44,7 @@ skills across data engineering, LLM + RAG, agent orchestration, and low-latency 
 - Fixtures live in `data/fixtures/*.jsonl` (on-chain and off-chain samples).
 - Schema is defined in `src/normalize/schema.py`.
 - Validate fixtures:
-  - `pip install -r requirements.txt`
+  - `pip install -r requirements-core.txt`
   - `python scripts/validate_fixtures.py`
 
 ## Phase 1: RSS ingestion
@@ -44,7 +52,7 @@ skills across data engineering, LLM + RAG, agent orchestration, and low-latency 
 - Default feeds are in `src/ingest/rss.py`.
 - Details: `docs/INGEST_RSS.md`.
 - Run:
-  - `pip install -r requirements.txt`
+  - `pip install -r requirements-core.txt`
   - `python scripts/ingest_rss.py`
 - Output: `data/ingest/rss_events.jsonl`
 
@@ -52,7 +60,7 @@ skills across data engineering, LLM + RAG, agent orchestration, and low-latency 
 - Fetch and normalize Ethereum logs via Alchemy.
 - Details: `docs/INGEST_ONCHAIN.md`.
 - Run:
-  - `pip install -r requirements.txt`
+  - `pip install -r requirements-core.txt`
   - `python scripts/ingest_onchain.py`
 - Output: `data/ingest/onchain_events.jsonl`
 
@@ -60,7 +68,7 @@ skills across data engineering, LLM + RAG, agent orchestration, and low-latency 
 - Build rolling-count features from ingested events and flag simple surges.
 - Details: `docs/FEATURE_STORE.md`.
 - Run:
-  - `pip install -r requirements.txt`
+  - `pip install -r requirements-core.txt`
   - `python scripts/build_features.py`
 - Outputs: `data/feature_store.duckdb`, `data/features/*`
 
@@ -68,14 +76,14 @@ skills across data engineering, LLM + RAG, agent orchestration, and low-latency 
 - FastAPI service that reads local JSONL outputs.
 - Details: `docs/API.md`.
 - Run:
-  - `pip install -r requirements.txt`
+  - `pip install -r requirements-core.txt`
   - `python scripts/run_api.py`
 
 ## Phase 4: RAG index
 - Build a Chroma vector index from ingested events for retrieval.
 - Details: `docs/RAG.md`.
 - Run:
-  - `pip install -r requirements.txt`
+  - `pip install -r requirements-rag.txt`
   - `python scripts/build_rag_index.py`
 
 ## Why it matters
